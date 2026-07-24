@@ -39,3 +39,4 @@ HTTP reads use exponential backoff with jitter, and honor `Retry-After` on 429. 
 - In-process background thread for ingest alongside uvicorn: fewer moving parts for the assessment; a real deployment would separate the worker and API (and likely use a queue/orchestrator).
 - No metrics backend or alerting wiring: structured logs + SQL/HTTP inspection cover failure visibility for this scope.
 - Completed runs are not automatically replayed on container restart; re-running requires resetting checkpoint state. Idempotent upserts would still protect the `ads` table if replay were forced.
+- Automated tests (`pytest`) cover the assessment behaviors with a mix of unit and Postgres-backed integration tests rather than a full `docker compose` e2e harness, to keep the feedback loop fast.
