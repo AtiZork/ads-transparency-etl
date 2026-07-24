@@ -66,11 +66,10 @@ def upsert_ad(session: Session, record: AdRecord) -> str:
                 & (stmt.excluded.version > Ad.version)
             )
         ),
-    )
+    ).returning(Ad.ad_id)
+    # RETURNING is empty when the conflict WHERE clause skips the update.
     result = session.execute(stmt)
-    if result.rowcount and result.rowcount > 0:
-        return "loaded"
-    return "skipped"
+    return "loaded" if result.first() is not None else "skipped"
 
 
 def isolate_error(
