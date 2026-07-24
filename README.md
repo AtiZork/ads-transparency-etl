@@ -79,8 +79,26 @@ Checkpoints are stored in `pipeline_checkpoints`. After each source page is full
 db/init.sql          schema
 source/              simulated Ads Transparency API
 pipeline/            ETL worker + HTTP status API
+tests/               pytest unit + integration suite
 docker-compose.yml
 DECISIONS.md
+```
+
+## Tests
+
+```bash
+pip install -r pipeline/requirements.txt -r requirements-dev.txt
+pytest
+```
+
+The suite covers validation, source-feed realism, retry/backoff, version-aware upserts, dead-letter isolation, checkpoint resume, and the `/stats` `/errors` `/ads` API.
+
+DB-backed tests need PostgreSQL. By default they boot a local throwaway cluster when Postgres 15+ binaries are available. Alternatively set:
+
+```bash
+# PowerShell
+$env:TEST_DATABASE_URL="postgresql+psycopg://etl:etl@127.0.0.1:5432/ads_intel_test"
+pytest
 ```
 
 ## Configuration
